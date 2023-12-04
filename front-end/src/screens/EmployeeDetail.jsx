@@ -1,20 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import ParticlesComponent from "../components/ParticlesComponent";
 import { IoArrowBackOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from 'axios';
+
+const GET_ALL_URL = "http://localhost:3001/emp/employees"
+const GET_ONE_URL = "http://localhost:3001/emp/employees/:eid"
 
 export default function EmployeeDetail() {
     
-  const employeelist = [
-    {
-      id: 1,
-      firstName: "John",
-      lastName: "Doe",
-      email: "johndoe@gmail.com",
-      gender: "Male",
-      salary: 10000,
-    },
-  ];
+  // const employeelist = [
+  //   {
+  //     id: 1,
+  //     firstName: "John",
+  //     lastName: "Doe",
+  //     email: "johndoe@gmail.com",
+  //     gender: "Male",
+  //     salary: 10000,
+  //   },
+  // ];
+
+  const [employeelist, setEmployeelist] = useState([]);
+
+  const { eid } = useParams();
+  console.log(eid);
+
+  useEffect(() => {
+    axios.get(GET_ALL_URL)
+      .then((res) => {
+        console.log(res.data.data.employees);
+        setEmployeelist(res.data.data.employees);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  if (employeelist.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen min-w-full">
+        <ParticlesComponent />
+        <h1 className="text-4xl font-bold text-gray-700 bg-slate-300 rounded-xl
+        p-10">Loading...</h1>
+      </div>
+    );
+  }
+
 
   return (
     <div>

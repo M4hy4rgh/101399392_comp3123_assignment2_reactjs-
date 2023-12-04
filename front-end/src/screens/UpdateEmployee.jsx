@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RxTextAlignLeft } from "react-icons/rx";
 import { FaWallet } from "react-icons/fa6";
 import { FaUser, FaEnvelope } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams} from "react-router-dom";
 import { IoArrowBackOutline } from "react-icons/io5";
 import ParticlesComponent from "../components/ParticlesComponent";
+import axios from 'axios';
 
 export default function UpdateEmployee() {
   const [selectedOption, setSelectedOption] = useState("");
@@ -12,6 +13,51 @@ export default function UpdateEmployee() {
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
   };
+
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    gender: "",
+    salary: "",
+  });
+
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+   loadEmployee();
+  }, []);
+  // useEffect(() => {
+  //   if (id) loadEmployee();
+  // }, [id]);
+
+  const loadEmployee = async () => {
+    const result = await axios.get(`http://localhost:3001/emp/employees/${id}`);
+    setFormData(result.data.data.employee);
+  }
+
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+
+    setFormData({ ...formData, [name]: value });
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.put(`http://localhost:3001/emp/employees/${id}`, formData);
+      console.log(res.data);
+      navigate("/employees");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+
+
+
 
   return (
     <div>
@@ -40,7 +86,7 @@ export default function UpdateEmployee() {
             </div>
 
             {/* FirstName */}
-            <form className="flex flex-col justify-center items-center w-3/4 sm:w-3/4">
+            <form className="flex flex-col justify-center items-center w-3/4 sm:w-3/4" onSubmit={handleSubmit}  >
               <div className="flex flex-col relative w-full">
                 <label className="text-gray-400 mb-1">First Name</label>
                 <div className="flex relative mx-2 ">
@@ -49,6 +95,9 @@ export default function UpdateEmployee() {
                   </span>
                   <input
                     type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleInput}
                     className="w-full h-10 pl-10 pr-3 text-base placeholder-gray-400 text-black border rounded-lg focus:shadow-outline"
                     placeholder="First Name"
                   />
@@ -63,6 +112,9 @@ export default function UpdateEmployee() {
                   </span>
                   <input
                     type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInput}
                     className="w-full h-10 pl-10 pr-3 text-base placeholder-gray-400 text-black border rounded-lg focus:shadow-outline"
                     placeholder="Last Name"
                   />
@@ -78,6 +130,9 @@ export default function UpdateEmployee() {
                   </span>
                   <input
                     type="text"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInput}
                     className="w-full h-10 pl-10 pr-3 text-base placeholder-gray-400 text-black border rounded-lg focus:shadow-outline"
                     placeholder="Email"
                   />
@@ -92,8 +147,8 @@ export default function UpdateEmployee() {
                     <FaUser />
                   </span>
                   <select
-                    value={selectedOption}
-                    onChange={handleChange}
+                    value={[selectedOption, formData.gender]}
+                    onChange={[handleChange, handleInput]}
                     className=" w-full h-10 pl-10 pr-3 text-base placeholder-gray-400 border rounded-lg focus:shadow-outline"
                     style={{
                       color:
@@ -122,6 +177,9 @@ export default function UpdateEmployee() {
                   </span>
                   <input
                     type="text"
+                    name="salary"
+                    value={formData.salary}
+                    onChange={handleInput}
                     className="w-full h-10 pl-10 pr-3 text-base placeholder-gray-400 text-black border rounded-lg focus:shadow-outline"
                     placeholder="Salary"
                   />
@@ -130,7 +188,7 @@ export default function UpdateEmployee() {
 
               {/* Submit Button */}
               <div className="flex flex-col mt-6 w-52 self-center">
-                <Link to="/dashboard">
+                <Link to="/employees">
                   <button
                     type="submit"
                     className="w-full h-12 px-6 py-2 font-medium tracking-wide text-white capitalize 

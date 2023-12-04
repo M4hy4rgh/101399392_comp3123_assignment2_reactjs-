@@ -3,10 +3,10 @@ const mongoose = require("mongoose"); //import mongoose
 const userRoute = require("./routes/userRoute"); //import userRoute.js
 const employeeRoute = require("./routes/employeeRoute"); //import employeeRoute.js
 
-// const cors = require('cors');
-// app.use(cors());
+const cors = require('cors');
 
 const app = express(); //Creates an Express application
+app.use(cors());
 
 app.use(express.json()); //Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3001;
 // process.env.CONNECTION_STRING: gets the connection string from the environment variables
 const CONECTION_STRING =
   process.env.CONNECTION_STRING ||
-  "mongodb+srv://mahyargh:M~4hy4rgh1@cluster0.rjnawtv.mongodb.net/comp3123_assigment1";
+  "mongodb+srv://mahyargh:M~4hy4rgh1@cluster0.rjnawtv.mongodb.net/comp3123_assigment2";
 
 // mongoose.connect: connects to the database
 mongoose.connect(CONECTION_STRING, {

@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import { IoLogInOutline } from "react-icons/io5";
 import { FaUser,FaLock  } from "react-icons/fa";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import ParticlesComponent from '../components/ParticlesComponent';
+import axios from 'axios'
 
 
 import "../components/assets/css/myStyle.css";
@@ -10,7 +11,32 @@ import "../components/assets/css/myStyle.css";
 function Login() {
 
     const [labelColor, setLableColor] = useState(null);
-    const[isChecked, setIsChecked] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
+    const [username, setUsername] = useState(null);
+    const [password, setPassword] = useState(null);
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        const data = {
+            username: username,
+            password: password
+        }
+        const res = await axios.post('http://localhost:3001/user/login', data);
+        // console.log(res);
+        console.log(res.data);
+        if (res.data.status === 200) {
+            localStorage.setItem('valid', true);
+            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('username', res.data.username);
+            localStorage.setItem('id', res.data.id);
+            navigate('/dashboard');
+        } else {
+            localStorage.setItem('valid', false);
+            alert('Invalid credentials');
+        }
+    }
+
 
     const handleFocus = (e) => {
         setLableColor("text-white");
@@ -35,22 +61,22 @@ function Login() {
          <div className="welcome text-center	mt-6 mb-2 text-2xl font-bold">
              <h2 className="title">Hello there,<br/>Please Login below!</h2>
          </div>
-         <form className="myForm flex flex-col gap-4 justify-center items-center w-80" autocomplete="off">
+         <form className="myForm flex flex-col gap-4 justify-center items-center w-80" autocomplete="off" onSubmit={handleLogin}>
              <div className="input-con relative w-full">
                  <input type="text" id="username" className="input-lg h-11 px-3 w-full text-base border border-solid
                          border-slate-600 border-l-4 border-l-slate-400 bg-gray-800/50 focus:outline-0
-                         focus:border-l-white focus:shadow-[0_0_15px_5px_#7692A7]" placeholder="Username"
+                         focus:border-l-white focus:shadow-[0_0_15px_5px_#7692A7]" placeholder="Username" onChange={(e) => setUsername(e.target.value)}
                          required/>
                  <FaUser className="absolute top-3.5 left-72 " id="user-icon"/>
             </div>
              <div className="input-con relative w-full">
                  <input type="password" id="password" className="input-lg h-11 px-3 w-full text-base border border-solid
                          border-slate-600 border-l-4 border-l-slate-400 bg-gray-800/50 outline-0 focus:border-l-white
-                         focus:shadow-[0_0_15px_5px_#7692A7]" placeholder="Password" required />
+                         focus:shadow-[0_0_15px_5px_#7692A7]" placeholder="Password" onChange={(e) => setPassword(e.target.value)} required />
             <FaLock className="absolute top-3.5 left-72" id="pass-icon"/>
              </div>
              <div className="input-con w-full text-center">
-                 <Link to="/dashboard">
+                 <Link to="/employees">
                      <input type="submit" value="Login" name="login" id="loginButton" className="h-11 px-3 w-full
                          border-2 border-solid border-gray-400 bg-transparent bg-none cursor-pointer text-lg
                          font-bold text-slate-300 shadow-[inset_0_0_0_0_#7692A7] hover:bg-transparent
