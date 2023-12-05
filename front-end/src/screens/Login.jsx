@@ -8,7 +8,6 @@ import axios from "axios";
 import "../components/assets/css/myStyle.css";
 
 function Login() {
-  const [isChecked, setIsChecked] = useState(false);
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
   const navigate = useNavigate();
