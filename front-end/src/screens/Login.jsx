@@ -8,7 +8,6 @@ import axios from "axios";
 import "../components/assets/css/myStyle.css";
 
 function Login() {
-  const [labelColor, setLableColor] = useState(null);
   const [isChecked, setIsChecked] = useState(false);
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
@@ -16,30 +15,30 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const data = {
+    let data = {
       username: username,
       password: password,
     };
-    const res = await axios.post("http://localhost:8089/user/login", data);
 
-    if (res.data.status === 200) {
-      localStorage.setItem("valid", true);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("username", res.data.username);
-      localStorage.setItem("id", res.data.id);
-      navigate("/dashboard");
-    } else {
-      localStorage.setItem("valid", false);
+    data.username = data.username.toLowerCase();
+   
+
+    try {
+      const res = await axios.post("http://localhost:8089/user/login", data);
+  
+      if (res.data.status === 200) {
+        localStorage.setItem("valid", true);
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("username", res.data.username);
+        localStorage.setItem("id", res.data.id);
+        navigate("/dashboard");
+      } else {
+        localStorage.setItem("valid", false);
+        alert("Invalid credentials");
+      }
+    } catch (err) {
       alert("Invalid credentials");
     }
-  };
-
-  const handleFocus = (e) => {
-    setLableColor("text-white");
-  };
-
-  const handleIsCheck = (e) => {
-    setIsChecked(!isChecked);
   };
 
   return (
@@ -48,7 +47,7 @@ function Login() {
       <div
         className="inner-container flex flex-col justify-center items-center gap-1.5 min-h-[520px] min-w-[400px]
      bg-sky-900/60 shadow-[1px_1px_10px_1px_#000000,8px_8px_0px_0px_#344454,12px_12px_10px_0px_#000000] m-auto relative
-     sm:min-w-[400px] sm:min-h-[520px]"
+     sm:min-w-[400px] sm:min-h-[520px] "
       >
         <div className="-top-[45px] flex justify-center items-center relative mb-6">
           <div className=" bg-sky-950/80 p-5 rounded-full shadow-[0px_0px_9px_2px_#344454] absolute">
@@ -66,33 +65,37 @@ function Login() {
           </h2>
         </div>
         <form
-          className="myForm flex flex-col gap-4 justify-center items-center w-80"
+          className="myForm flex flex-col gap-4 justify-center items-center w-80  "
           autoComplete="off"
           onSubmit={handleLogin}
         >
-          <div className="input-con relative w-full">
-            <input
-              type="text"
-              id="username"
-              className="input-lg h-11 px-3 w-full text-base border border-solid
-                         border-slate-600 border-l-4 border-l-slate-400 bg-gray-800/50 focus:outline-0
-                         focus:border-l-white focus:shadow-[0_0_15px_5px_#7692A7]"
-              placeholder="Username"
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <FaUser className="absolute top-3.5 left-72 " id="user-icon" />
+          <div className="input-con relative w-full flex flex-row justify-center items-center">
+            <span className='span-con relative w-full'>
+              <input
+                type="text"
+                id="username"
+                className="input-lg h-11 pl-9 px-3 w-full text-base border border-solid
+                           border-slate-600 border-l-4 border-l-slate-400 bg-gray-800/50 focus:outline-0
+                           focus:border-l-white focus:shadow-[0_0_15px_5px_#7692A7]"
+                placeholder="Username"
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <FaUser className="absolute top-3 left-3" size={20} id="user-icon" />
+            </span>
           </div>
-          <div className="input-con relative w-full">
+          <div className="input-con relative w-full flex flex-row justify-center items-center">
+          <span className='span-con relative w-full'>
             <input
               type="password"
               id="password"
-              className="input-lg h-11 px-3 w-full text-base border border-solid
+              className="input-lg h-11 pl-9 px-3 w-full text-base border border-solid
                          border-slate-600 border-l-4 border-l-slate-400 bg-gray-800/50 outline-0 focus:border-l-white
                          focus:shadow-[0_0_15px_5px_#7692A7]"
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
             />
-            <FaLock className="absolute top-3.5 left-72" id="pass-icon" />
+              <FaLock className="absolute top-3 left-3" size={20} id="pass-icon" />
+              </span>
           </div>
           <div className="input-con w-full text-center">
             <input
@@ -109,24 +112,12 @@ function Login() {
                          hover:animate-[scale_1.1s_ease-out_alternate-reverse_infinite]"
             />
           </div>
-          <div className="f-r-r-con input-con flex flex-row justify-between items-start w-full gap-[50px]">
-            <div className="check space-x-1">
-              <input
-                type="checkbox"
-                id="rememberMe"
-                className="focus:outline-0"
-                onFocus={handleFocus}
-                onChange={() => setIsChecked(!isChecked)}
-                checked={isChecked}
-              />
-              <label
-                id="rememberMeLabel"
-                className={`${labelColor}`}
-                onClick={handleIsCheck}
-              >
-                Remember me
-              </label>
-            </div>
+          <div className="f-r-r-con input-con flex flex-col justify-center items-center w-full gap-3">
+          <div class="flex gap-1 justify-center items-center mt-3 mb-2">
+            <p>----------------</p>
+            <span>or</span>
+            <p>----------------</p>
+          </div>
             <div className="f-r-con check flex flex-col justify-center items-end gap-1">
               <Link
                 to="/signup"

@@ -8,8 +8,6 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import axios from "axios";
 
 export default function AddEmployee() {
-  const [errorMessage, setErrorMessage] = useState(""); // Add error state
-
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
@@ -34,16 +32,16 @@ export default function AddEmployee() {
 
     try {
       await axios.post("http://localhost:8089/emp/employees", formData);
-
       navigate("/dashboard");
     } catch (err) {
+      alert(err.response.data.message);
       console.log(err);
     }
   };
 
   return (
     <div>
-      <div className="flex flex-col items-start justify-start pl-5 py-4 text-gray-500 bg-[#282828] absolute w-full z-10">
+      <div className="flex flex-col items-start justify-start pl-5 py-4  text-gray-500 bg-[#282828] absolute w-full z-10">
         <h1 className="text-4xl font-bold">Add Employee</h1>
       </div>
       <div className="container mx-auto min-h-screen min-w-full">

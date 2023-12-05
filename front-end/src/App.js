@@ -7,9 +7,7 @@ import Dashboard from "./screens/Dashboard";
 import AddEmployee from "./screens/AddEmployee";
 import EmployeeDetail from "./screens/EmployeeDetail";
 import UpdateEmployee from "./screens/UpdateEmployee";
-// import { Navigate } from 'react-router-dom'
-// import ProtectedRoute from "./components/ProtectedRoute" // Import the protected route
-import AuthRoute from "./components/AuthRoute" // Import the HOC
+import AuthRoute from "./components/AuthRoute" 
 
 function App() {
 

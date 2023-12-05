@@ -11,8 +11,12 @@ export default function Dashboard() {
   }, []);
 
   const loadEmployees = async () => {
-    const result = await axios.get("http://localhost:8089/emp/employees");
-    setEmployeelist(result.data.data.employees);
+    try {
+      const result = await axios.get("http://localhost:8089/emp/employees");
+      setEmployeelist(result.data.data.employees);
+    } catch (err) {
+      console.error("Error loading employees:", err);
+    }
   };
 
   const navigate = useNavigate();

@@ -42,6 +42,8 @@ export default function UpdateEmployee() {
         setFormData(employeeData);
       } catch (err) {
         console.log(err);
+        alert(err.response.data.message);
+
         }
     };
     loadEmployee(); 
@@ -59,6 +61,8 @@ export default function UpdateEmployee() {
       navigate("/dashboard");
     } catch (err) {
       console.log(err);
+      alert(err.response.data.message);
+
     }
   }
 
