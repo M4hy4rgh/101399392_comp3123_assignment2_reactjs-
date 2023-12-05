@@ -10,7 +10,8 @@ import ParticlesComponent from '../components/ParticlesComponent';
 export default function Register() {
 
     const[first_name, setFirstName] = useState('');
-    const[last_name, setLastName] = useState('');
+    const [last_name, setLastName] = useState('');
+    const[username, setUsername] = useState('');
     const[email, setEmail] = useState('');
     const[password, setPassword] = useState('');
     const[con_password, setCon_password] = useState('');
@@ -18,6 +19,7 @@ export default function Register() {
     const formData = {
         firstName: first_name,
         lastName: last_name,
+        username,
         email,
         password,
         con_password
@@ -26,52 +28,17 @@ export default function Register() {
     const navigate = useNavigate();
 
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-
-    //     if (password !== con_password) {
-    //         alert('Password and Confirm Password must be same');
-    //         return;
-    //     }
-
-    //     try {
-    //         const res = await axios.post('http://localhost:3001/user/signup', formData);
-    //         console.log(res);
-    //         if (res.data.status === 201) {
-    //             alert('Registration Successful');
-    //             navigate('/dashboard');
-
-    //         } else {
-    //             alert('Registration Failed');
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-
-    // }
-
-
-    // const handleChange = (e) => {
-    //     setFormData({ ...formData, [e.target.id]: e.target.value });
-    // }
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     if (password === con_password) {
-    //         console.log(formData);
-    //     } else {
-    //         alert('Password and Confirm Password must be same');
-    //     }
-    // }
-
     const handleRegistration = async (e) => {
         e.preventDefault();
         const { password, con_password } = formData;
         if (password === con_password) {
-            const res = await axios.post('http://localhost:3001/user/signup', formData);
-
+            const res = await axios.post('http://localhost:8089/user/signup', formData);
+            
             if (res.data.status === 201) {
-
+                localStorage.setItem('valid', true);
+                localStorage.setItem('token', res.data.token);
+                localStorage.setItem('username', res.data.username);
+                localStorage.setItem('id', res.data.id);
                 alert('Registration Successful');
                 navigate('/dashboard');
             } else {
@@ -82,58 +49,6 @@ export default function Register() {
         }
 
     }
-
-
-
-
-
-
-    // const [formData, setFormData] = useState({
-    //     firstName: '',
-    //     lastName: '',
-    //     email: '',
-    //     password: '',
-    //     con_password: ''
-    // });
-
-    // const { firstName, lastName, email, password, con_password } = formData;
-    // const handleInputChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setFormData({ ...formData, [name]: value });
-    // };
-
-    // const handleChange = (e) => {
-    //     setFormData({ ...formData, [e.target.id]: e.target.value });
-    // }
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     if (password === con_password) {
-    //         console.log(formData);
-    //     } else {
-    //         alert('Password and Confirm Password must be same');
-    //     }
-    // }
-    // const navigate = useNavigate();
-
-    // const handleRegistration = async (e) => {
-    //     e.preventDefault();
-    //     const {password, con_password } = formData;
-    //     if (password === con_password) {
-    //         const res = await axios.post('http://localhost:3001/user/signup', formData);
-    //         console.log(res);
-    //         if (res.data.status === 201) {
-    //             alert('Registration Successful');
-    //             navigate('/dashboard');
-    //         } else {
-    //             alert('Registration Failed');
-    //         }
-    //     } else {
-    //         alert('Password and Confirm Password must be same');
-    //     }
-      
-    // }
-
 
 
     return (
@@ -156,7 +71,7 @@ export default function Register() {
         </div>
 
         <form className="myForm flex flex-col gap-4 justify-center items-center w-72 md:grid md:grid-cols-2 md:w-[350px]
-         md:gap-2.5" autocomplete="off" onSubmit={handleRegistration}>
+         md:gap-2.5" autoComplete="off" onSubmit={handleRegistration}>
             <div className="input-con relative w-full">
                 <input type="text" value={formData.firstName} id="firstName" className="input-lg h-11 px-3 w-full text-base border border-solid
                         border-slate-600 border-l-4 border-l-slate-400 bg-gray-800/50 focus:outline-0
@@ -172,13 +87,24 @@ export default function Register() {
                 <FaUser className="absolute top-3.5 left-64 focus:text-white focus:shadow-[0_0_px_20px_black]
                 md:top-3.5 md:left-36" id='user-icon'/>
             </div>
+                    
+            <div className="input-con relative w-full md:col-span-2 flex flex-row justify-center items-center">
+                <span className='span-con relative w-full'>
 
-            <div className="input-con relative w-full md:col-span-2">
-                <input type="email" value={formData.email} id="email" className="input-lg h-11 px-3 w-full text-base border border-solid
+                    <input type="text" value={formData.username} id="username" className="input-lg h-11 pl-9 px-3 w-full text-base border border-solid
                         border-slate-600 border-l-4 border-l-slate-400 bg-gray-800/50 outline-0 focus:border-l-white
-                        focus:shadow-[0_0_15px_5px_#7692A7]" placeholder="Email" onChange={(e)=> setEmail(e.target.value)} required/>
-                <FaEnvelope  className="fa-solid fa-envelope absolute top-3.5 left-64 focus:text-white focus:shadow-[0_0_px_20px_black]
-                md:top-3.5 md:left-[92%]"id='email-icon'/>
+                        focus:shadow-[0_0_15px_5px_#7692A7]" placeholder="Username" onChange={(e) => setUsername(e.target.value)} required/>  
+                    <FaUser className="absolute top-3 left-3" size={20} id='username-icon'/>
+                </span>
+            </div>
+
+            <div className="input-con relative w-full md:col-span-2 flex flex-row justify-center items-center">
+                <span className='span-con relative w-full'>
+                    <input type="email" value={formData.email} id="email" className="input-lg  h-11 pl-9  px-3 w-full text-base border border-solid
+                            border-slate-600 border-l-4 border-l-slate-400 bg-gray-800/50 outline-0 focus:border-l-white
+                            focus:shadow-[0_0_15px_5px_#7692A7]" placeholder="Email" onChange={(e)=> setEmail(e.target.value)} required/>
+                    <FaEnvelope  className="absolute top-3 left-3 " size={20} id='email-icon'/>
+                </span>
             </div>
 
             <div className="input-con relative w-full md:col-span-2">

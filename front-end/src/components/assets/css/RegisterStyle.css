@@ -39,16 +39,22 @@ body {
 
 
 .myForm .input-con input:focus + #user-icon, .myForm .input-con input:focus + #pass-icon,
- .myForm .input-con input:focus + #email-icon, .myForm .input-con input:focus + #pass-icon2 {
+ .myForm .input-con input:focus + #email-icon, .myForm .input-con input:focus + #pass-icon2,
+ .myForm .input-con .span-con input:focus + #username-icon {
     color: #fff;
     border: 0;
     box-shadow: 0 0 100px 0 #7692A7;
 }
 
 .myForm .input-con .input-lg:focus + #user-icon, .myForm .input-con input:focus + #pass-icon,
-.myForm .input-con input:focus + #email-icon, .myForm .input-con input:focus + #pass-icon2 {
+.myForm .input-con input:focus + #email-icon, .myForm .input-con input:focus + #pass-icon2, 
+ .myForm .input-con .span-con input:focus + #username-icon  {
     animation: scale .7s infinite;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 2px;
+    text-underline-offset: 5px;
 }
+
 
 .container .inner-container .social-con .social-media:focus{
     color: white;

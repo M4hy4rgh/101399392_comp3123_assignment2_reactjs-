@@ -2,6 +2,20 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 
 const userSchema = new mongoose.Schema({
+  firstName: {
+    type: String,
+    required: true,
+    maxlength: 100,
+    trim: true,
+    lowercase: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+    maxlength: 100,
+    trim: true,
+    lowercase: true,
+  },
   username: {
     type: String,
     required: true,
@@ -24,7 +38,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    maxlength: 50,
+    maxlength: 80,
   },
 });
 

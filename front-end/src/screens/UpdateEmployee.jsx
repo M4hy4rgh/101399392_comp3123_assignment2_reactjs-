@@ -8,54 +8,61 @@ import ParticlesComponent from "../components/ParticlesComponent";
 import axios from 'axios';
 
 export default function UpdateEmployee() {
-  const [selectedOption, setSelectedOption] = useState("");
 
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
   const handleChange = (event) => {
-    setSelectedOption(event.target.value);
+    const { name, value } = event.target;
+      setFormData({ ...formData, [name]: capitalizeFirstLetter(value) });
   };
+ 
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     gender: "",
     salary: "",
   });
 
-  const { id } = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
-   loadEmployee();
-  }, []);
-  // useEffect(() => {
-  //   if (id) loadEmployee();
-  // }, [id]);
+    const loadEmployee = async () => {
+      try {
+        const result = await axios.get(`http://localhost:8089/emp/employees/${id}`);
+        const employeeData = result.data.data.employees;
+        
+        employeeData.first_name = capitalizeFirstLetter(employeeData.first_name);
+        employeeData.last_name = capitalizeFirstLetter(employeeData.last_name);
+        employeeData.email = capitalizeFirstLetter(employeeData.email);
 
-  const loadEmployee = async () => {
-    const result = await axios.get(`http://localhost:3001/emp/employees/${id}`);
-    setFormData(result.data.data.employee);
-  }
+        setFormData(employeeData);
+      } catch (err) {
+        console.log(err);
+        }
+    };
+    loadEmployee(); 
+  }, [id]);
+  
 
-  const handleInput = (e) => {
-    const { name, value } = e.target;
-
-    setFormData({ ...formData, [name]: value });
-  }
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await axios.put(`http://localhost:3001/emp/employees/${id}`, formData);
+      const res = await axios.put(`http://localhost:8089/emp/employees/${id}`, formData);
       console.log(res.data);
-      navigate("/employees");
+      navigate("/dashboard");
     } catch (err) {
       console.log(err);
     }
   }
 
-
+ 
 
 
 
@@ -86,7 +93,7 @@ export default function UpdateEmployee() {
             </div>
 
             {/* FirstName */}
-            <form className="flex flex-col justify-center items-center w-3/4 sm:w-3/4" onSubmit={handleSubmit}  >
+            <form className="flex flex-col justify-center items-center w-3/4 sm:w-3/4" onSubmit={handleSubmit} autoComplete="false"  >
               <div className="flex flex-col relative w-full">
                 <label className="text-gray-400 mb-1">First Name</label>
                 <div className="flex relative mx-2 ">
@@ -95,9 +102,9 @@ export default function UpdateEmployee() {
                   </span>
                   <input
                     type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleInput}
+                    name="first_name"
+                    value={formData.first_name}
+                    onChange={handleChange}
                     className="w-full h-10 pl-10 pr-3 text-base placeholder-gray-400 text-black border rounded-lg focus:shadow-outline"
                     placeholder="First Name"
                   />
@@ -112,9 +119,9 @@ export default function UpdateEmployee() {
                   </span>
                   <input
                     type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInput}
+                    name="last_name"
+                    value={formData.last_name}
+                    onChange={handleChange}
                     className="w-full h-10 pl-10 pr-3 text-base placeholder-gray-400 text-black border rounded-lg focus:shadow-outline"
                     placeholder="Last Name"
                   />
@@ -132,7 +139,7 @@ export default function UpdateEmployee() {
                     type="text"
                     name="email"
                     value={formData.email}
-                    onChange={handleInput}
+                    onChange={handleChange}
                     className="w-full h-10 pl-10 pr-3 text-base placeholder-gray-400 text-black border rounded-lg focus:shadow-outline"
                     placeholder="Email"
                   />
@@ -147,14 +154,15 @@ export default function UpdateEmployee() {
                     <FaUser />
                   </span>
                   <select
-                    value={[selectedOption, formData.gender]}
-                    onChange={[handleChange, handleInput]}
+                    value={formData.gender}
+                    onChange={handleChange}
+                    name="gender"
                     className=" w-full h-10 pl-10 pr-3 text-base placeholder-gray-400 border rounded-lg focus:shadow-outline"
                     style={{
                       color:
-                        selectedOption === "Male" || selectedOption === "Female"
-                          ? "#000"
-                          : "#9ca3af", // Apply different colors based on the selected option
+                      formData.gender === "Male" || formData.gender === "Female"
+                      ? "#000"
+                      : "#9ca3af", 
                     }}
                   >
                     <option value="">Select...</option>
@@ -179,7 +187,7 @@ export default function UpdateEmployee() {
                     type="text"
                     name="salary"
                     value={formData.salary}
-                    onChange={handleInput}
+                    onChange={handleChange}
                     className="w-full h-10 pl-10 pr-3 text-base placeholder-gray-400 text-black border rounded-lg focus:shadow-outline"
                     placeholder="Salary"
                   />
@@ -188,16 +196,16 @@ export default function UpdateEmployee() {
 
               {/* Submit Button */}
               <div className="flex flex-col mt-6 w-52 self-center">
-                <Link to="/employees">
                   <button
-                    type="submit"
+                  type="submit"
+                  name="submit"
+                  value="submit"
                     className="w-full h-12 px-6 py-2 font-medium tracking-wide text-white capitalize 
-                                                       duration-200 transform bg-sky-600 rounded-full hover:bg-sky-500 
-                                                      focus:outline-none focus:bg-sky-500 hover:scale-[1.095] transition-all duration-800 ease-linear "
+                      duration-200 transform bg-sky-600 rounded-full hover:bg-sky-500 
+                    focus:outline-none focus:bg-sky-500 hover:scale-[1.095] transition-all duration-800 ease-linear "
                   >
                     Add Employee
                   </button>
-                </Link>
               </div>
             </form>
           </div>

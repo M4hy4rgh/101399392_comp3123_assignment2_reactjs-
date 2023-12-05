@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 
 
 // process.env.PORT: gets the port from the environment variables
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8089;
 
 // process.env.CONNECTION_STRING: gets the connection string from the environment variables
 const CONECTION_STRING =
@@ -31,7 +31,7 @@ app.use("/emp", employeeRoute); //Use employeeRoute.js for /employees route
 
 // app.route: chainable route handler for a route path
 app.route("/").get((req, res) => {
-  res.send("<h1>Wlecome to COMP3123 Assignment 1</h1>");
+  res.send("<h1>Wlecome to COMP3123 Assignment 2</h1>");
 });
 
 // app.listen: starts the server
